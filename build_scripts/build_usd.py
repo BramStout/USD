@@ -1323,7 +1323,7 @@ OPENIMAGEIO = Dependency("OpenImageIO", InstallOpenImageIO,
 ############################################################
 # OpenColorIO
 
-OCIO_URL = "https://github.com/imageworks/OpenColorIO/archive/v1.1.0.zip"
+OCIO_URL = "https://github.com/AcademySoftwareFoundation/OpenColorIO/archive/refs/tags/v2.2.1.zip"
 
 def InstallOpenColorIO(context, force, buildArgs):
     with CurrentWorkingDirectory(DownloadURL(OCIO_URL, context, force)):
@@ -1334,7 +1334,10 @@ def InstallOpenColorIO(context, force, buildArgs):
                      '-DOCIO_BUILD_TESTS=OFF',
                      '-DOCIO_BUILD_PYGLUE=OFF',
                      '-DOCIO_BUILD_JNIGLUE=OFF',
-                     '-DOCIO_STATIC_JNIGLUE=OFF']
+                     '-DOCIO_STATIC_JNIGLUE=OFF',
+                     '-DOCIO_BUILD_PYTHON=OFF',
+                     '-DOCIO_BUILD_OPENFX=OFF',
+                     '-DOCIO_BUILD_GPU_TESTS=OFF']
 
         # OpenImageIO v1.1.0 fails to build on Windows with the RelWithDebInfo
         # build type because it doesn't set up the correct properties for the

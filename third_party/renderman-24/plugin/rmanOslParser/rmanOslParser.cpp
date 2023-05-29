@@ -475,10 +475,12 @@ RmanOslParserPlugin::_getDefaultValue(
         }
 
         VtIntArray array;
-        array.reserve( (size_t) param->ArrayLength() );
-        for (int i = 0; i <  param->ArrayLength(); ++i)
-        {
-            array.push_back( dflts[i] );
+        if(param->ArrayLength() > 0){
+            array.reserve( (size_t) param->ArrayLength() );
+            for (int i = 0; i <  param->ArrayLength(); ++i)
+            {
+                array.push_back( dflts[i] );
+            }
         }
 
         return VtValue::Take(array);
@@ -496,10 +498,12 @@ RmanOslParserPlugin::_getDefaultValue(
 
         // Handle array
         VtStringArray array;
-        array.reserve( (size_t) param->ArrayLength() );
-        for (int i = 0; i <  param->ArrayLength(); ++i)
-        {
-            array.push_back( std::string( dflts[i] ) );
+        if(param->ArrayLength() > 0){
+            array.reserve( (size_t) param->ArrayLength() );
+            for (int i = 0; i <  param->ArrayLength(); ++i)
+            {
+                array.push_back( std::string( dflts[i] ) );
+            }
         }
         return VtValue::Take(array);
     }
@@ -514,10 +518,12 @@ RmanOslParserPlugin::_getDefaultValue(
         }
 
         VtFloatArray array;
-        array.reserve( (size_t) param->ArrayLength() );
-        for (int i = 0; i <  param->ArrayLength(); ++i)
-        {
-            array.push_back( dflts[i] ); 
+        if(param->ArrayLength() > 0){
+            array.reserve( (size_t) param->ArrayLength() );
+            for (int i = 0; i <  param->ArrayLength(); ++i)
+            {
+                array.push_back( dflts[i] ); 
+            }
         }
 
         return VtValue::Take(array);

@@ -49,6 +49,46 @@ private:
         const HdPrmanLoaderRendererPlugin&) = delete;
 };
 
+class HdPrmanXPULoaderRendererPlugin final : public HdRendererPlugin 
+{
+public:
+    HdPrmanXPULoaderRendererPlugin();
+    virtual ~HdPrmanXPULoaderRendererPlugin();
+
+    HdRenderDelegate *CreateRenderDelegate() override;
+    HdRenderDelegate *CreateRenderDelegate(
+        HdRenderSettingsMap const& settingsMap) override;
+    void DeleteRenderDelegate(HdRenderDelegate *) override;
+    bool IsSupported(bool gpuEnabled = true) const override;
+
+private:
+    // This class does not support copying.
+    HdPrmanXPULoaderRendererPlugin(
+        const HdPrmanXPULoaderRendererPlugin&) = delete;
+    HdPrmanXPULoaderRendererPlugin &operator =(
+        const HdPrmanXPULoaderRendererPlugin&) = delete;
+};
+
+class HdPrmanXPUCPULoaderRendererPlugin final : public HdRendererPlugin 
+{
+public:
+    HdPrmanXPUCPULoaderRendererPlugin();
+    virtual ~HdPrmanXPUCPULoaderRendererPlugin();
+
+    HdRenderDelegate *CreateRenderDelegate() override;
+    HdRenderDelegate *CreateRenderDelegate(
+        HdRenderSettingsMap const& settingsMap) override;
+    void DeleteRenderDelegate(HdRenderDelegate *) override;
+    bool IsSupported(bool gpuEnabled = true) const override;
+
+private:
+    // This class does not support copying.
+    HdPrmanXPUCPULoaderRendererPlugin(
+        const HdPrmanXPUCPULoaderRendererPlugin&) = delete;
+    HdPrmanXPUCPULoaderRendererPlugin &operator =(
+        const HdPrmanXPUCPULoaderRendererPlugin&) = delete;
+};
+
 // These macros are used to shim the actual hdPrman delegate implementation
 #define HDPRMAN_LOADER_CREATE_DELEGATE \
     extern "C" ARCH_EXPORT HdRenderDelegate* HdPrmanLoaderCreateDelegate( \

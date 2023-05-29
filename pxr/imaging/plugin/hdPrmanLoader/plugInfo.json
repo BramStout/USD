@@ -9,6 +9,20 @@
                         ],
                         "displayName": "Prman",
                         "priority": 49
+                    },
+                    "HdPrmanXPULoaderRendererPlugin": {
+                        "bases": [
+                            "HdRendererPlugin"
+                        ],
+                        "displayName": "Prman XPU",
+                        "priority": 49
+                    },
+                    "HdPrmanXPUCPULoaderRendererPlugin": {
+                        "bases": [
+                            "HdRendererPlugin"
+                        ],
+                        "displayName": "Prman XPU CPU",
+                        "priority": 49
                     }
                 }
             },

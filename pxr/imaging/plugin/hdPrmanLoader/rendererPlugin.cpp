@@ -30,6 +30,9 @@
 #include "pxr/base/tf/setenv.h"
 #include "pxr/imaging/hd/rendererPluginRegistry.h"
 
+#include "pxr/base/tf/token.h"
+#include "pxr/base/vt/value.h"
+
 PXR_NAMESPACE_OPEN_SCOPE
 
 typedef HdRenderDelegate* (*CreateDelegateFunc)(
@@ -147,7 +150,13 @@ HdPrmanLoader::~HdPrmanLoader()
 TF_REGISTRY_FUNCTION(TfType)
 {
     HdRendererPluginRegistry::Define<HdPrmanLoaderRendererPlugin>();
+    HdRendererPluginRegistry::Define<HdPrmanXPULoaderRendererPlugin>();
+    HdRendererPluginRegistry::Define<HdPrmanXPUCPULoaderRendererPlugin>();
 }
+
+
+
+// Prman
 
 HdPrmanLoaderRendererPlugin::HdPrmanLoaderRendererPlugin()
 {
@@ -189,6 +198,114 @@ HdPrmanLoaderRendererPlugin::DeleteRenderDelegate(
 
 bool
 HdPrmanLoaderRendererPlugin::IsSupported(bool /* gpuEnabled */) const
+{
+    // Eventually will need to make this deal with whether RIS or XPU is used.
+    return _hdPrman.valid;
+}
+
+
+
+// Prman XPU
+
+HdPrmanXPULoaderRendererPlugin::HdPrmanXPULoaderRendererPlugin()
+{
+    HdPrmanLoader::Load();
+}
+
+HdPrmanXPULoaderRendererPlugin::~HdPrmanXPULoaderRendererPlugin()
+{
+}
+
+HdRenderDelegate*
+HdPrmanXPULoaderRendererPlugin::CreateRenderDelegate()
+{
+    if (_hdPrman.valid) {
+        HdRenderSettingsMap settingsMap;
+        settingsMap[TfToken("ri:variant")] = VtValue("xpu");
+        settingsMap[TfToken("ri:xpudevices")] = VtValue("cpugpu");
+        return _hdPrman.createFunc(settingsMap);
+    }
+    return nullptr;
+}
+
+HdRenderDelegate*
+HdPrmanXPULoaderRendererPlugin::CreateRenderDelegate(
+    HdRenderSettingsMap const& settingsMap)
+{
+    if (_hdPrman.valid) {
+        HdRenderSettingsMap settingsMapCopy(settingsMap);
+        settingsMapCopy[TfToken("ri:variant")] = VtValue("xpu");
+        settingsMapCopy[TfToken("ri:xpudevices")] = VtValue("cpugpu");
+        return _hdPrman.createFunc(settingsMapCopy);
+    }
+    return nullptr;
+}
+
+void
+HdPrmanXPULoaderRendererPlugin::DeleteRenderDelegate(
+    HdRenderDelegate *renderDelegate)
+{
+    if (_hdPrman.valid) {
+        _hdPrman.deleteFunc(renderDelegate);
+    }
+}
+
+bool
+HdPrmanXPULoaderRendererPlugin::IsSupported(bool /* gpuEnabled */) const
+{
+    // Eventually will need to make this deal with whether RIS or XPU is used.
+    return _hdPrman.valid;
+}
+
+
+
+// Prman XPU CPU
+
+HdPrmanXPUCPULoaderRendererPlugin::HdPrmanXPUCPULoaderRendererPlugin()
+{
+    HdPrmanLoader::Load();
+}
+
+HdPrmanXPUCPULoaderRendererPlugin::~HdPrmanXPUCPULoaderRendererPlugin()
+{
+}
+
+HdRenderDelegate*
+HdPrmanXPUCPULoaderRendererPlugin::CreateRenderDelegate()
+{
+    if (_hdPrman.valid) {
+        HdRenderSettingsMap settingsMap;
+        settingsMap[TfToken("ri:variant")] = VtValue("xpu");
+        settingsMap[TfToken("ri:xpudevices")] = VtValue("cpu");
+        return _hdPrman.createFunc(settingsMap);
+    }
+    return nullptr;
+}
+
+HdRenderDelegate*
+HdPrmanXPUCPULoaderRendererPlugin::CreateRenderDelegate(
+    HdRenderSettingsMap const& settingsMap)
+{
+    if (_hdPrman.valid) {
+        HdRenderSettingsMap settingsMapCopy(settingsMap);
+        settingsMapCopy[TfToken("ri:variant")] = VtValue("xpu");
+        settingsMapCopy[TfToken("ri:xpudevices")] = VtValue("cpu");
+        return _hdPrman.createFunc(settingsMapCopy);
+    }
+    return nullptr;
+}
+
+void
+HdPrmanXPUCPULoaderRendererPlugin::DeleteRenderDelegate(
+    HdRenderDelegate *renderDelegate)
+{
+    if (_hdPrman.valid) {
+        _hdPrman.deleteFunc(renderDelegate);
+    }
+}
+
+bool
+HdPrmanXPUCPULoaderRendererPlugin::IsSupported(bool /* gpuEnabled */) const
 {
     // Eventually will need to make this deal with whether RIS or XPU is used.
     return _hdPrman.valid;
